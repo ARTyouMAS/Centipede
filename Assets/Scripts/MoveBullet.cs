@@ -37,15 +37,15 @@ public class MoveBullet : MonoBehaviour
             var mas = FindObjectsOfType<CentipedeController>();
             foreach (CentipedeController obj in mas) //Перебираем все существующие объекты. 
             {
-                obj.Split(collision.gameObject);
+               obj.StartCoroutine(obj.SplitC(collision.gameObject));
             }
 
-            FindObjectOfType<GameController>().AddScore(ScoreType.СentipedeHit); //Добавляем очки за попадание.
+            FindObjectOfType<GameController>().AddScore(ScoreType.СentipedeHit, collision.transform.position); //Добавляем очки за попадание.
             Destroy(this.gameObject);
         }
         else if (collision.gameObject.name == "Prefab_Ant(Clone)")
         {
-            FindObjectOfType<GameController>().AddScore(ScoreType.AntHit); //Добавляем очки за попадание.
+            FindObjectOfType<GameController>().AddScore(ScoreType.AntHit, collision.transform.position); //Добавляем очки за попадание.
             Destroy(this.gameObject);
             Destroy(collision.gameObject);
         }

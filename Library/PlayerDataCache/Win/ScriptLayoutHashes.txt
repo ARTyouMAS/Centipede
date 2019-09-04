@@ -1,6 +1,6 @@
 Win
 PlayerPath?
-C:/Users/Art/Desktop/CentipedeGame/Centipede.exe
+C:/Users/Art/Desktop/Centipede/Centipede.exe
 SceneListBegin?
 Assets/Scenes/Main.unity
 SceneListEnd?
@@ -86,7 +86,7 @@ fc108ce7d98c40ac0907e8ca7f500c76 UnityEngine.UI.dll:UnityEngine.UI.Text
 0fd6822f6177297bd0eb4d83cc7a9030 UnityEngine.UI.dll:UnityEngine.UI.ToggleGroup
 abf1930d8126d0b2e00e9449129a0190 UnityEngine.UI.dll:UnityEngine.EventSystems.TouchInputModule
 64e54c0cbb0177c5ea26f340efb9ff85 UnityEngine.UI.dll:UnityEngine.UI.VerticalLayoutGroup
-c75a16ec9d64f56b9675e02dc6507a67 Assembly-CSharp.dll:.TilemapController
+52192bcde681d1136a0b287ef53d0d4f Assembly-CSharp.dll:.TilemapController
 71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
 06f0fef534ca4c1d6064fd77a26bf722 UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationTrack
 780e8f682b3221346c034a6712a0fd25 UnityEngine.Timeline.dll:UnityEngine.Timeline.AnimationPlayableAsset
@@ -155,14 +155,15 @@ fb6a1ea36b4f6ef5948d283d93760765 UnityEngine.GoogleAudioSpatializer.dll:UnityEng
 fb6a1ea36b4f6ef5948d283d93760765 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 5b0391b7e3d9ea9db6c0a8fbd0ca23f6 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension
 5b0391b7e3d9ea9db6c0a8fbd0ca23f6 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
-8b8289df6dfc292568cf7d4a0e8f74b7 Assembly-CSharp.dll:.PlayerController
+bc7d09989f8b717b9c11b551d68fad5a Assembly-CSharp.dll:.PlayerController
 a4f0a4f62100f1a4fb5cbe0e00dde83f Unity.TextMeshPro.dll:TMPro.TextMeshProUGUI
 5fc094978ce3e3591a7500ed380d854a Unity.Analytics.DataPrivacy.dll:UnityEngine.Analytics.DataPrivacyButton
 d251bf88db6c95a6b1aa0b69298da9ef UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 afc5b93a7b192de2dcb3832fe35a5c7e Assembly-CSharp.dll:.PlayerMove
 d791aa6007fa3640be1164ea75bb087d Unity.TextMeshPro.dll:TMPro.TMP_StyleSheet
+d532d4f66ec16db91e57ad2172d45dac Assembly-CSharp.dll:.Bonus
 c6666661329916e218bee7f5e79e60f5 Unity.TextMeshPro.dll:TMPro.TextMeshPro
 3165968ba45c74472d279ba04455fccb Unity.TextMeshPro.dll:TMPro.TMP_ColorGradient
-8890e0b0eddbdf5b864ad06ce24b05be Assembly-CSharp.dll:.GameController
+a68699cd4f30e34fa30bae9ac0867fe9 Assembly-CSharp.dll:.GameController
 d368ab1a803c03bc84f331fcb1d5ec34 Assembly-CSharp.dll:.PlayerShoot
 8649814970b42d345b89944b862453cc Unity.TextMeshPro.dll:TMPro.TMP_SubMesh

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class Colors
 {
-    public static Color Get() //Получить случайный цвет.
+    public static Color Get() //Возвращает случайный цвет.
     {
 
         //byte[] Rgb = new byte[] { 0, 0, 0 };

@@ -12,20 +12,18 @@ public class CentipedeController : MonoBehaviour
         tilemapController = FindObjectOfType<TilemapController>();
     }
 
-    IEnumerator SplitC(GameObject _splitPoint)
+    public IEnumerator SplitC(GameObject splitPoint)
     {
         yield return new WaitForEndOfFrame();
 
-        if (centBody.Find(x => x == _splitPoint) != null)//Проверка - есть ли объект в листе.
+        if (centBody.Find(x => x == splitPoint) != null)//Проверка - есть ли объект в листе.
         {
-            int index = centBody.FindIndex(x => x == _splitPoint); //Индекс элемента который нужно удалить.
+            int index = centBody.FindIndex(x => x == splitPoint); //Индекс элемента который нужно удалить.
 
             if (centBody.Count >= 2)//Существует ли возможность разделится?
             {
-                GameObject go = new GameObject(); //Создаем новый объект контроллер.
-                go.AddComponent<CentipedeController>();
-                go.GetComponent<CentipedeController>().centBody = new List<GameObject>();
-               // go.GetComponent<CentipedeController>().tilemapController = tilemapController;
+                CentipedeController centipedeController = new GameObject().AddComponent<CentipedeController>(); //Создаем новый объект контроллер.
+                centipedeController.centBody = new List<GameObject>();
 
                 GameObject newHead; //Объект новой головы.
                  
@@ -45,7 +43,7 @@ public class CentipedeController : MonoBehaviour
 
                 for (int i = index + 1; i < centBody.Count; i++) 
                 {
-                    go.GetComponent<CentipedeController>().centBody.Add(centBody[i]);//Прикрепляем в новой контроллер вторую половину.
+                    centipedeController.centBody.Add(centBody[i]);//Прикрепляем в новой контроллер вторую половину.
                 }
             }
 
@@ -56,22 +54,18 @@ public class CentipedeController : MonoBehaviour
 
             if (centBody.Count == 0) //Если не осталось компонентов - удаляем контроллер.
             {
-                FindObjectOfType<GameController>().EndLevelCheck(); //Проверка на прохождения уровня.
+                var GC = FindObjectOfType<GameController>();//Проверка на прохождения уровня.
+                GC.StartCoroutine(GC.EndLevelCheckCour());
                 Destroy(this.gameObject);
             }
         }
     }
 
-    public void Split(GameObject _splitPoint)
-    {
-        StartCoroutine(SplitC(_splitPoint));
-    }
-
     public void Destroy() //Уничтожение врага.
     {
-        foreach(GameObject _gO in centBody)
+        foreach(GameObject gO in centBody)
         {
-            Destroy(_gO.gameObject);
+            Destroy(gO.gameObject);
         }
 
         Destroy(this.gameObject);

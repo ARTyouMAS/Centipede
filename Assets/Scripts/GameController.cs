@@ -10,6 +10,8 @@ public class GameController : MonoBehaviour
     public GameObject menuPanel;
     public GameObject lossPanel;
 
+    public Canvas canvas;
+
     public Text scoreText;
     public Text recordText;
 
@@ -18,22 +20,26 @@ public class GameController : MonoBehaviour
     public GameObject centipedePrefab;
     public GameObject centipedeHeadPrefab;
     public GameObject antPrefab;
+    public GameObject popupTextPrefab;
 
     public GameObject roof; //Объект для изменения направления врага по оси Y.
 
-    public bool levelStarted;
-
     public TilemapController tilemapController;
+
+    public bool levelStarted;
 
     int score;
     int record;
     int crntLevel;
 
+    bool gameOver;
+
     Coroutine spawnAntCoroutine;
 
     void Start()
     {
-        recordText.text = "Record: " + record;
+        record = PlayerPrefs.GetInt("record");
+        recordText.text = $"Record: {record}";
 
         crntLevel = 1;
     }
@@ -46,6 +52,15 @@ public class GameController : MonoBehaviour
         }
     }
 
+    public GameObject CreateCentipede()
+    {
+        GameObject centipede = Instantiate(centipedePrefab); //Создаем врага.
+        centipede.transform.position = new Vector3(Random.Range(-4, 20), 0, 0);
+        centipede.GetComponentInChildren<CentipedeHead>().offset = 1;
+
+        return centipede;
+    }
+
     public void StartGame()
     {
         menuPanel.SetActive(false);
@@ -54,9 +69,7 @@ public class GameController : MonoBehaviour
 
         spawnAntCoroutine = StartCoroutine(SpawnAnt());
 
-        GameObject gO = Instantiate(centipedePrefab); //Создаем врага.
-        gO.transform.position = new Vector3(Random.Range(-4, 20), 0, 0);
-        gO.GetComponentInChildren<CentipedeHead>().offset = 1;
+        CreateCentipede();
     }
 
     IEnumerator SpawnAnt()
@@ -69,12 +82,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void EndLevelCheck()
-    {
-        StartCoroutine(EndLevelCheckCour());
-    }
-
-    IEnumerator EndLevelCheckCour()
+    public IEnumerator EndLevelCheckCour()
     {
         yield return new WaitForSeconds(0.1f);
         if (FindObjectOfType<CentipedeBody>() == null) //Проверяем наличие врагов на сцене, если нет - уровень пройден.
@@ -84,7 +92,7 @@ public class GameController : MonoBehaviour
                 LevelControll(true);
             }
         }
-    }
+    } 
 
     public void LevelControll(bool nextLevel)
     {
@@ -94,14 +102,15 @@ public class GameController : MonoBehaviour
         if (nextLevel)
         {
             crntLevel++;
-            AddScore(ScoreType.LevelCompleted);
+            AddScore(ScoreType.LevelCompleted, Vector3.zero);
             tilemapController.ChangeTilesColor(); //Меняем цвет блоков на новом уровне.
         }
 
-        SceneClearing(false);
+        gameOver = false;
+        SceneClearing();
     }
 
-    public void SceneClearing(bool gameOver) //Очистка сцены от врагов и обновление блоков.
+    public void SceneClearing() //Очистка сцены от врагов и обновление блоков.
     {
         if (spawnAntCoroutine != null)
             StopCoroutine(spawnAntCoroutine);
@@ -118,23 +127,20 @@ public class GameController : MonoBehaviour
             obj.Destroy();
         }
 
-        tilemapController.UpdateTiles(gameOver);
+        tilemapController.UpdateTiles();
     }
 
-    public void LevelControllContinue(bool gameOver)
+    public void LevelControllContinue()
     {
         if (!gameOver)
         {
-            GameObject centipede = Instantiate(centipedePrefab);
-            centipede.transform.position = new Vector3(Random.Range(-4, 20), 0, 0);
-            centipede.GetComponentInChildren<CentipedeHead>().offset = 1;
+            CentipedeController centipedeController = CreateCentipede().GetComponentInChildren<CentipedeController>();
 
             for (int i = 0; i < crntLevel - 1; i++)
             {
-                var lastSegment = centipede.GetComponentInChildren<CentipedeController>().
-                    centBody[centipede.GetComponentInChildren<CentipedeController>().centBody.Count - 1]; //Получаем последний сегмент.
+                var lastSegment = centipedeController.centBody[centipedeController.centBody.Count - 1]; //Получаем последний сегмент.
 
-                centipede.GetComponentInChildren<CentipedeController>().centBody.Remove(lastSegment); //Удаляем из списка.
+                centipedeController.centBody.Remove(lastSegment); //Удаляем из списка.
                 Destroy(lastSegment); //Удаляем со сцены.
 
                 GameObject head = Instantiate(centipedeHeadPrefab); //Создаем дополнительную голову.
@@ -155,8 +161,16 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void AddScore(ScoreType score)
+    public void AddScore(ScoreType score, Vector3 pos)
     {
+        if(score != ScoreType.LevelCompleted)
+        {
+            var text = Instantiate(popupTextPrefab, canvas.transform);
+            text.transform.position = pos;
+            text.transform.GetChild(0).GetComponent<Text>().text = $"+{(int)score*crntLevel}";
+            Destroy(text, 1f);
+        }
+
         this.score += (int)score * crntLevel;
         scoreText.text = this.score.ToString();
     }
@@ -170,19 +184,21 @@ public class GameController : MonoBehaviour
             PlayerPrefs.SetInt("record", record);
         }
 
-        SceneClearing(true);
+        gameOver = true;
+        SceneClearing();
     }
 
-    public void ChangeLifeIcons(int life ,bool addLife)
-    { 
+    public void ChangeLifeIcons(int life, bool addLife)
+    {
         if (addLife) //Если жизнь добавилась.
         {
-            lifeIcons[life-1].SetActive(true);
+            lifeIcons[life - 1].SetActive(true);
         }
         else //Если жизнь отнялась. 
         {
             lifeIcons[life].SetActive(false);
         }
+
     }
 
     public void BackToMenu()

@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 
     GameController gameController;
 
-    int life;
+    public int life;
 
     private void Start()
     {
@@ -54,50 +54,4 @@ public class PlayerController : MonoBehaviour
         FindObjectOfType<GameController>().GameOver();
     }
 
-    public void Bonus()
-    {
-        if(Random.Range(0,5) == Random.Range(0, 5))
-        {
-            switch (Random.Range(0, 5)) //Шанс получить жизнь меньше.
-            {
-                case 0:
-                    if (life == 3)
-                        goto case 1;
-                    BonusLife();
-                    break;
-                case 1:
-                case 2:
-                    IncreaseShootingSpeed();
-                    break;
-                case 3:
-                case 4:
-                    IncreaseSpeed();
-                    break;
-            }
-        }
-    }
-
-    public void IncreaseSpeed()
-    {
-        if (speed < 15)
-        {
-            speed += 0.7f;
-            GetComponent<PlayerMove>().speed = speed;
-        }
-    }
-
-    public void IncreaseShootingSpeed()
-    {
-        if (fireDelay < 0.15)
-        {
-            fireDelay -= 0.02f;
-            GetComponent<PlayerShoot>().fireDelay = fireDelay;
-        }
-    }
-
-    public void BonusLife()
-    {
-        life += 1;
-        gameController.ChangeLifeIcons(life, true);
-    }
 }

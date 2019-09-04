@@ -12,8 +12,7 @@ public class Ant : MonoBehaviour
     int speed = 4;
 
     void Start()
-    {
-        
+    {      
         tilemapController = FindObjectOfType<TilemapController>();
 
         xPos = Random.Range(-12.5f, 12.5f); //Получаем случайную позицию по оси X.

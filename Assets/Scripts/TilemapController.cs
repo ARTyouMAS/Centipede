@@ -10,6 +10,7 @@ public class TilemapController : MonoBehaviour
     PlayerController playerController;
 
     public Tile defaultTile, bigTitle, middleTile, smallTile;
+    public GameObject bonusPrefab;
 
     private void Start()
     {
@@ -20,12 +21,10 @@ public class TilemapController : MonoBehaviour
 
     public void HitTile(Vector3 tilePosition) //Попадания в блок.
     {
-
-        if (tilemap.GetTile(tilemap.WorldToCell(tilePosition)) != null)
+        TileBase tile = tilemap.GetTile(tilemap.WorldToCell(tilePosition));
+        if (tile)
         {
-            string name = tilemap.GetTile(tilemap.WorldToCell(tilePosition)).name;
-
-            switch (name) //Взависимости от имени отпределяем следующий спрайт.
+            switch (tile.name)//(name) //Взависимости от имени отпределяем следующий спрайт.
             {
                 case "defaultMeteor":
                     StartCoroutine(SetTile(tilePosition, bigTitle));
@@ -38,8 +37,11 @@ public class TilemapController : MonoBehaviour
                     break;
                 case "smallMeteor": //При разрушении блока добавляем очки и вызываем функцию возможного получения бонуса.
                     StartCoroutine(SetTile(tilePosition, null)); //Ставим пустой блок.
-                    gameController.AddScore(ScoreType.BlockDestruction);
-                    playerController.Bonus();
+                    gameController.AddScore(ScoreType.BlockDestruction, tilePosition);
+                    if (Random.Range(0, 12) == Random.Range(0, 12))
+                    {
+                        Instantiate(bonusPrefab, transform).GetComponent<Transform>().position = tilePosition;
+                    }
                     break;
                 default:
                     break;
@@ -63,7 +65,7 @@ public class TilemapController : MonoBehaviour
         tilemap.color = Colors.Get(); //Получаем случайный цвет и устанавливаем его.
     }
 
-    public void UpdateTiles(bool gameOver) //Получаем все блоки на сцене.
+    public void UpdateTiles()//Получаем все блоки на сцене.
     {
         BoundsInt bounds = tilemap.cellBounds;
         TileBase[] allTiles = tilemap.GetTilesBlock(bounds);
@@ -79,19 +81,19 @@ public class TilemapController : MonoBehaviour
                 }
             }
         }
-        StartCoroutine(UpdateTilesCour(pos, gameOver));
+        StartCoroutine(UpdateTilesCour(pos));
     }
 
-    IEnumerator UpdateTilesCour(List<Vector3Int> pos, bool gameOver)
+    IEnumerator UpdateTilesCour(List<Vector3Int> pos)
     {
         foreach(Vector3Int tilePos in pos) //Обновляем подбитые блоки. 
         {         
             tilemap.SetTile(tilePos, defaultTile);
-            gameController.AddScore(ScoreType.BlockDestruction); //Начисляем очки за каждый подбитый блок.
-            yield return new WaitForSeconds(0.2f);
+            gameController.AddScore(ScoreType.BlockDestruction, tilePos); //Начисляем очки за каждый подбитый блок.
+            yield return new WaitForSeconds(0.1f);
         }
 
         yield return new WaitForSeconds(0.5f);
-        gameController.LevelControllContinue(gameOver); //Продолжаем загрузку следующего уровня.
+        gameController.LevelControllContinue();//Продолжаем загрузку следующего уровня.
     }
 }
